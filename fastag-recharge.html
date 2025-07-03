@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FASTag Recharge - Parklopedia</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .recharge-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .recharge-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .recharge-header i {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .recharge-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .amount-option {
+            padding: 10px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .amount-option:hover {
+            border-color: #3498db;
+            background-color: #f8f9fa;
+        }
+        
+        .amount-option.selected {
+            border-color: #3498db;
+            background-color: #e3f2fd;
+        }
+        
+        .custom-amount {
+            margin-top: 10px;
+        }
+        
+        .recharge-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .recharge-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .recharge-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .recharge-history {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-date {
+            color: #7f8c8d;
+        }
+        
+        .history-amount {
+            font-weight: 600;
+            color: #2ecc71;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .success-message i {
+            font-size: 48px;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+        
+        .success-message h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .success-message p {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="recharge-container">
+        <div class="recharge-header">
+            <i class="fas fa-tag"></i>
+            <h2>FASTag Recharge</h2>
+        </div>
+        
+        <div class="recharge-form">
+            <div class="form-group">
+                <label for="fastagId">FASTag ID</label>
+                <input type="text" id="fastagId" placeholder="Enter your FASTag ID" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Current Balance</label>
+                <input type="text" id="currentBalance" placeholder="Loading..." readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Recharge Amount</label>
+                <div class="amount-options">
+                    <div class="amount-option" onclick="selectAmount(100)">₹100</div>
+                    <div class="amount-option" onclick="selectAmount(200)">₹200</div>
+                    <div class="amount-option" onclick="selectAmount(500)">₹500</div>
+                    <div class="amount-option" onclick="selectAmount(1000)">₹1000</div>
+                    <div class="amount-option" onclick="selectAmount(2000)">₹2000</div>
+                    <div class="amount-option" onclick="selectAmount(5000)">₹5000</div>
+                </div>
+                <div class="custom-amount">
+                    <input type="number" id="customAmount" placeholder="Enter custom amount" min="100" step="100">
+                </div>
+            </div>
+            
+            <button class="recharge-btn" onclick="processRecharge()" disabled>Recharge Now</button>
+        </div>
+        
+        <div class="recharge-history">
+            <h3>Recharge History</h3>
+            <div id="historyList">
+                <!-- History items will be added here -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script>
+        let selectedAmount = 0;
+        
+        // Load FASTag details
+        window.onload = function() {
+            const fastagId = sessionStorage.getItem('fastagId') || 'FAST123456789';
+            const fastagBalance = sessionStorage.getItem('fastagBalance') || '500.00';
+            
+            document.getElementById('fastagId').value = fastagId;
+            document.getElementById('currentBalance').value = `₹${fastagBalance}`;
+            
+            loadRechargeHistory();
+        };
+        
+        function selectAmount(amount) {
+            selectedAmount = amount;
+            
+            // Update UI
+            document.querySelectorAll('.amount-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            const selectedOption = Array.from(document.querySelectorAll('.amount-option'))
+                .find(option => option.textContent === `₹${amount}`);
+            
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+            
+            // Clear custom amount
+            document.getElementById('customAmount').value = '';
+            
+            // Enable recharge button
+            document.querySelector('.recharge-btn').disabled = false;
+        }
+        
+        document.getElementById('customAmount').addEventListener('input', function(e) {
+            const amount = parseInt(e.target.value);
+            if (amount >= 100) {
+                selectedAmount = amount;
+                
+                // Clear selected options
+                document.querySelectorAll('.amount-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Enable recharge button
+                document.querySelector('.recharge-btn').disabled = false;
+            } else {
+                selectedAmount = 0;
+                document.querySelector('.recharge-btn').disabled = true;
+            }
+        });
+        
+        function processRecharge() {
+            if (selectedAmount < 100) {
+                showToast("Please select a valid amount (minimum ₹100)");
+                return;
+            }
+            
+            // Show loading overlay
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = 'loading-overlay';
+            loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+            document.body.appendChild(loadingOverlay);
+            
+            // Simulate recharge processing
+            setTimeout(() => {
+                // Remove loading overlay
+                document.body.removeChild(loadingOverlay);
+                
+                // Update balance
+                const currentBalance = parseFloat(sessionStorage.getItem('fastagBalance') || '500.00');
+                const newBalance = currentBalance + selectedAmount;
+                sessionStorage.setItem('fastagBalance', newBalance.toFixed(2));
+                
+                // Add to history
+                addToHistory(selectedAmount);
+                
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Recharge Successful!</h3>
+                    <p>Your FASTag has been recharged with ₹${selectedAmount}</p>
+                    <button class="recharge-btn" onclick="window.location.href='payment.html'">Back to Payment</button>
+                `;
+                
+                document.querySelector('.recharge-container').innerHTML = '';
+                document.querySelector('.recharge-container').appendChild(successMessage);
+            }, 2000);
+        }
+        
+        function addToHistory(amount) {
+            const history = JSON.parse(sessionStorage.getItem('fastagHistory') || '[]');
+            const newEntry = {
+                date: new Date().toLocaleDateString(),
+                amount: amount
+            };
+            history.unshift(newEntry);
+            sessionStorage.setItem('fastagHistory', JSON.stringify(history));
+        }
+        
+        function loadRechargeHistory() {
+            const history = JSON.parse(sessionStorage.getItem('fastagHistory') || '[]');
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<p>No recharge history available</p>';
+                return;
+            }
+            
+            historyList.innerHTML = history.map(entry => `
+                <div class="history-item">
+                    <span class="history-date">${entry.date}</span>
+                    <span class="history-amount">₹${entry.amount}</span>
+                </div>
+            `).join('');
+        }
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

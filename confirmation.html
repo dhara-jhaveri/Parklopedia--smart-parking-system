@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmation</title>
+</head>
+<body>
+    <h1>Booking Confirmation</h1>
+    <p id="confirmationMessage"></p>
+    <a href="feedback.html">Give Feedback</a>
+
+    <script>
+    window.onload = () => {
+        const details = JSON.parse(sessionStorage.getItem("bookingDetails"));
+        if (!details) {
+            window.location.href = "booking.html";
+            return;
+        }
+        document.getElementById("confirmationMessage").innerText =
+            `Thank you ${details.username}, your spot at ${details.location} is booked on ${details.time}.`;
+    };
+    </script>
+</body>
+</html>

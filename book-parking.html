@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parklopedia - Book Parking</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-name {
+            margin-right: 15px;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .page-title {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .back-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .booking-form {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .section-title {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .time-inputs {
+            display: flex;
+            gap: 15px;
+        }
+        .time-inputs .form-group {
+            flex: 1;
+        }
+        .special-facilities {
+            margin-top: 15px;
+        }
+        .facility-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .facility-option input {
+            width: auto;
+            margin-right: 10px;
+        }
+        .price-summary {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .price-row:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px dashed #ddd;
+            font-weight: bold;
+        }
+        .book-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .book-btn:hover {
+            background-color: #27ae60;
+        }
+        .no-vehicles {
+            text-align: center;
+            color: #e74c3c;
+            margin: 20px 0;
+        }
+        .add-vehicle-link {
+            display: block;
+            text-align: center;
+            color: #3498db;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .add-vehicle-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Parklopedia</div>
+        <div class="user-info">
+            <span class="user-name" id="userNameDisplay">Welcome, User</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <a href="parking-locations.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Locations
+        </a>
+        
+        <h1 class="page-title">Book Parking Slot</h1>
+        
+        <div id="noVehiclesMessage" class="no-vehicles" style="display: none;">
+            You need to register a vehicle before booking a parking slot.
+            <a href="register-vehicle.html" class="add-vehicle-link">Register a Vehicle</a>
+        </div>
+        
+        <div id="bookingForm" class="booking-form">
+            <div class="form-section">
+                <h2 class="section-title">Location Details</h2>
+                <div class="form-group">
+                    <label>Selected Location</label>
+                    <input type="text" id="locationName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Parking Spot</label>
+                    <input type="text" id="spotId" readonly>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2 class="section-title">Vehicle & Time Details</h2>
+                <div class="form-group">
+                    <label for="vehicleSelect">Select Your Vehicle</label>
+                    <select id="vehicleSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate">Date of Booking</label>
+                    <input type="date" id="bookingDate" min="">
+                </div>
+                <div class="time-inputs">
+                    <div class="form-group">
+                        <label for="startTime">From Time</label>
+                        <input type="time" id="startTime">
+                    </div>
+                    <div class="form-group">
+                        <label for="endTime">To Time</label>
+                        <input type="time" id="endTime">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2 class="section-title">Special Facilities</h2>
+                <div class="special-facilities">
+                    <div class="facility-option">
+                        <input type="checkbox" id="wheelchairAssistance">
+                        <label for="wheelchairAssistance">Wheelchair Assistance</label>
+                    </div>
+                    <div class="facility-option">
+                        <input type="checkbox" id="seniorCitizenHelp">
+                        <label for="seniorCitizenHelp">Senior Citizen Help</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2 class="section-title">Payment Summary</h2>
+                <div class="price-summary">
+                    <div class="price-row">
+                        <span>Base Parking Fee</span>
+                        <span id="baseFee">₹30.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Duration</span>
+                        <span id="duration">1 hour</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Special Facilities</span>
+                        <span id="facilitiesFee">₹0.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Total Amount</span>
+                        <span id="totalAmount">₹30.00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="book-btn" onclick="processBooking()">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <script>
+    // Check if user is logged in
+    document.addEventListener("DOMContentLoaded", function() {
+        const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+        if (!isLoggedIn || isLoggedIn !== "true") {
+            window.location.href = "login.html";
+            return;
+        }
+        
+        // Display user name
+        const username = sessionStorage.getItem("username");
+        if (username) {
+            document.getElementById("userNameDisplay").textContent = "Welcome, " + username;
+        }
+        
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("bookingDate").min = today;
+        document.getElementById("bookingDate").value = today;
+        
+        // Load booking info if coming from location selection
+        const bookingInfo = sessionStorage.getItem("currentBooking");
+        if (bookingInfo) {
+            const booking = JSON.parse(bookingInfo);
+            document.getElementById("locationName").value = booking.location;
+            document.getElementById("spotId").value = booking.spotId;
+        } else {
+            document.getElementById("locationName").value = "Select from Locations";
+            document.getElementById("spotId").value = "Not selected";
+        }
+        
+        // Load vehicles
+        loadVehicles();
+        
+        // Set up event listeners for price calculation
+        document.getElementById("startTime").addEventListener("change", calculatePrice);
+        document.getElementById("endTime").addEventListener("change", calculatePrice);
+        document.getElementById("wheelchairAssistance").addEventListener("change", calculatePrice);
+        document.getElementById("seniorCitizenHelp").addEventListener("change", calculatePrice);
+    });
+    
+    function logout() {
+        sessionStorage.removeItem("isLoggedIn");
+        sessionStorage.removeItem("username");
+        window.location.href = "login.html";
+    }
+    
+    function loadVehicles() {
+        const vehicleSelect = document.getElementById("vehicleSelect");
+        const noVehiclesMessage = document.getElementById("noVehiclesMessage");
+        const bookingForm = document.getElementById("bookingForm");
+        
+        // Get vehicles from storage
+        let vehicles = [];
+        const storedVehicles = sessionStorage.getItem("vehicles");
+        if (storedVehicles) {
+            vehicles = JSON.parse(storedVehicles);
+        }
+        
+        // Check if user has vehicles
+        if (vehicles.length === 0) {
+            noVehiclesMessage.style.display = "block";
+            bookingForm.style.display = "none";
+            return;
+        }
+        
+        // Populate vehicle dropdown
+        vehicleSelect.innerHTML = "";
+        vehicles.forEach((vehicle, index) => {
+            const option = document.createElement("option");
+            option.value = index;
+            option.textContent = `${vehicle.name} (${vehicle.numberPlate})`;
+            vehicleSelect.appendChild(option);
+        });
+    }
+    
+    function calculatePrice() {
+        const startTime = document.getElementById("startTime").value;
+        const endTime = document.getElementById("endTime").value;
+        const wheelchairAssistance = document.getElementById("wheelchairAssistance").checked;
+        const seniorCitizenHelp = document.getElementById("seniorCitizenHelp").checked;
+        
+        // Base fee based on location
+        const locationName = document.getElementById("locationName").value;
+        let baseHourlyRate = 30;
+        if (locationName === "City Center Parking") baseHourlyRate = 40;
+        if (locationName === "Railway Station Parking") baseHourlyRate = 25;
+        if (locationName === "Riverfront Parking") baseHourlyRate = 35;
+        
+        // Calculate duration
+        let hours = 1; // Default to 1 hour
+        if (startTime && endTime) {
+            const start = new Date(`2000-01-01T${startTime}`);
+            const end = new Date(`2000-01-01T${endTime}`);
+            if (end > start) {
+                const diff = (end - start) / (1000 * 60 * 60);
+                hours = Math.ceil(diff);
+            }
+        }
+        
+        // Calculate fees
+        const baseFee = baseHourlyRate * hours;
+        let facilitiesFee = 0;
+        if (wheelchairAssistance) facilitiesFee += 20;
+        if (seniorCitizenHelp) facilitiesFee += 15;
+        const totalAmount = baseFee + facilitiesFee;
+        
+        // Update display
+        document.getElementById("baseFee").textContent = `₹${baseFee.toFixed(2)}`;
+        document.getElementById("duration").textContent = `${hours} hour${hours > 1 ? 's' : ''}`;
+        document.getElementById("facilitiesFee").textContent = `₹${facilitiesFee.toFixed(2)}`;
+        document.getElementById("totalAmount").textContent = `₹${totalAmount.toFixed(2)}`;
+    }
+    
+    function processBooking() {
+        const locationName = document.getElementById("locationName").value;
+        const spotId = document.getElementById("spotId").value;
+        const vehicleIndex = document.getElementById("vehicleSelect").value;
+        const bookingDate = document.getElementById("bookingDate").value;
+        const startTime = document.getElementById("startTime").value;
+        const endTime = document.getElementById("endTime").value;
+        const wheelchairAssistance = document.getElementById("wheelchairAssistance").checked;
+        const seniorCitizenHelp = document.getElementById("seniorCitizenHelp").checked;
+        
+        // Validation
+        if (locationName === "Select from Locations" || spotId === "Not selected") {
+            alert("Please select a parking location and spot first");
+            window.location.href = "parking-locations.html";
+            return;
+        }
+        
+        if (!bookingDate || !startTime || !endTime) {
+            alert("Please select date and time for your booking");
+            return;
+        }
+        
+        if (startTime >= endTime) {
+            alert("End time must be after start time");
+            return;
+        }
+        
+        // Get vehicle details
+        let vehicles = [];
+        const storedVehicles = sessionStorage.getItem("vehicles");
+        if (storedVehicles) {
+            vehicles = JSON.parse(storedVehicles);
+        }
+        const vehicle = vehicles[vehicleIndex];
+        
+        // Calculate total amount
+        const totalAmount = document.getElementById("totalAmount").textContent;
+        
+        // Create booking object
+        const booking = {
+            location: locationName,
+            spotId: spotId,
+            vehicle: vehicle,
+            date: bookingDate,
+            startTime: startTime,
+            endTime: endTime,
+            wheelchairAssistance: wheelchairAssistance,
+            seniorCitizenHelp: seniorCitizenHelp,
+            amount: totalAmount,
+            status: "Confirmed",
+            bookingId: "PK" + Date.now().toString().slice(-6),
+            timestamp: new Date().toISOString()
+        };
+        
+        // Store booking
+        let bookings = [];
+        const storedBookings = sessionStorage.getItem("bookings");
+        if (storedBookings) {
+            bookings = JSON.parse(storedBookings);
+        }
+        bookings.push(booking);
+        sessionStorage.setItem("bookings", JSON.stringify(bookings));
+        sessionStorage.setItem("currentBookingDetails", JSON.stringify(booking));
+        
+        // Redirect to payment page
+        window.location.href = "payment.html";
+    }
+    </script>
+</body>
+</html>

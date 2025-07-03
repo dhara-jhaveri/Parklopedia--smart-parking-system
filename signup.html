@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parklopedia - Sign Up</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            animation: backgroundZoom 20s infinite alternate;
+        }
+        
+        @keyframes backgroundZoom {
+            0% { background-size: 100% auto; }
+            100% { background-size: 120% auto; }
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(52, 152, 219, 0.9));
+            z-index: 1;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { 
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .info-section {
+            flex: 1;
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { 
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to { 
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #3498db;
+        }
+        
+        .tagline {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .features {
+            margin-bottom: 30px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: featureSlideIn 0.5s ease-out forwards;
+        }
+        
+        @keyframes featureSlideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .feature:nth-child(1) { animation-delay: 0.2s; }
+        .feature:nth-child(2) { animation-delay: 0.4s; }
+        .feature:nth-child(3) { animation-delay: 0.6s; }
+        .feature:nth-child(4) { animation-delay: 0.8s; }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .signup-section {
+            flex: 1;
+            background-color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideInRight 1s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { 
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to { 
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .signup-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .signup-subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+        }
+        
+        .password-strength {
+            margin-top: 5px;
+            height: 4px;
+            background-color: #ddd;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .strength-weak { background-color: #e74c3c; }
+        .strength-medium { background-color: #f39c12; }
+        .strength-strong { background-color: #2ecc71; }
+        
+        .strength-text {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #7f8c8d;
+        }
+        
+        .password-requirements {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        
+        .requirement i {
+            margin-right: 5px;
+            font-size: 10px;
+        }
+        
+        .requirement.valid i {
+            color: #2ecc71;
+        }
+        
+        .requirement.invalid i {
+            color: #e74c3c;
+        }
+        
+        .signup-btn {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .signup-btn:active {
+            transform: translateY(0);
+        }
+        
+        .signup-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .signup-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+        }
+        
+        .login-link a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 5px;
+            font-size: 14px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .success-message {
+            color: #2ecc71;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 400px;
+            }
+            .info-section {
+                padding: 30px;
+            }
+            .signup-section {
+                padding: 30px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="info-section">
+            <div class="logo">Parklopedia</div>
+            <div class="tagline">Join the Smart Parking Revolution</div>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-car"></i></div>
+                    <div class="feature-text">Find parking spots in real-time</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                    <div class="feature-text">Book parking in advance</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="feature-text">Contactless payments</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="feature-text">Navigate to your parking spot</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="signup-section">
+            <div class="signup-header">
+                <h2 class="signup-title">Create Account</h2>
+                <p class="signup-subtitle">Join Parklopedia today</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name">
+                <div class="error-message" id="nameError">Please enter your full name</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email">
+                <div class="error-message" id="emailError">Please enter a valid email</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" placeholder="Enter your mobile number">
+                <div class="error-message" id="mobileError">Please enter a valid mobile number</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password">
+                <div class="password-strength">
+                    <div class="strength-meter" id="strengthMeter"></div>
+                </div>
+                <div class="strength-text" id="strengthText"></div>
+                <div class="password-requirements">
+                    <div class="requirement" id="lengthReq">
+                        <i class="fas fa-times"></i>
+                        At least 8 characters
+                    </div>
+                    <div class="requirement" id="uppercaseReq">
+                        <i class="fas fa-times"></i>
+                        At least 1 uppercase letter
+                    </div>
+                    <div class="requirement" id="numberReq">
+                        <i class="fas fa-times"></i>
+                        At least 1 number
+                    </div>
+                    <div class="requirement" id="specialReq">
+                        <i class="fas fa-times"></i>
+                        At least 1 special character
+                    </div>
+                </div>
+                <div class="error-message" id="passwordError">Please enter a valid password</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password">
+                <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+            </div>
+            
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                Account created successfully! Redirecting...
+            </div>
+            
+            <button class="signup-btn" id="signupBtn" onclick="signup()">Create Account</button>
+            
+            <div class="login-link">
+                Already have an account? <a href="login.html">Login Now</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function checkPasswordStrength(password) {
+        const hasLength = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        
+        // Update requirement indicators
+        document.getElementById('lengthReq').classList.toggle('valid', hasLength);
+        document.getElementById('uppercaseReq').classList.toggle('valid', hasUppercase);
+        document.getElementById('numberReq').classList.toggle('valid', hasNumber);
+        document.getElementById('specialReq').classList.toggle('valid', hasSpecial);
+        
+        // Calculate strength
+        let strength = 0;
+        if (hasLength) strength++;
+        if (hasUppercase) strength++;
+        if (hasNumber) strength++;
+        if (hasSpecial) strength++;
+        
+        // Update strength meter
+        const meter = document.getElementById('strengthMeter');
+        const text = document.getElementById('strengthText');
+        
+        meter.style.width = (strength * 25) + '%';
+        if (strength <= 1) {
+            meter.className = 'strength-meter strength-weak';
+            text.textContent = 'Weak';
+        } else if (strength <= 2) {
+            meter.className = 'strength-meter strength-medium';
+            text.textContent = 'Medium';
+        } else {
+            meter.className = 'strength-meter strength-strong';
+            text.textContent = 'Strong';
+        }
+        
+        return strength >= 3; // Require at least medium strength
+    }
+    
+    function signup() {
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        
+        // Reset error messages
+        document.getElementById("nameError").style.display = "none";
+        document.getElementById("emailError").style.display = "none";
+        document.getElementById("mobileError").style.display = "none";
+        document.getElementById("passwordError").style.display = "none";
+        document.getElementById("confirmPasswordError").style.display = "none";
+        
+        // Validation
+        let isValid = true;
+        
+        if (name === "") {
+            document.getElementById("nameError").style.display = "block";
+            isValid = false;
+        }
+        
+        if (!isValidEmail(email)) {
+            document.getElementById("emailError").style.display = "block";
+            isValid = false;
+        }
+        
+        if (!isValidMobile(mobile)) {
+            document.getElementById("mobileError").style.display = "block";
+            isValid = false;
+        }
+        
+        if (!checkPasswordStrength(password)) {
+            document.getElementById("passwordError").style.display = "block";
+            isValid = false;
+        }
+        
+        if (password !== confirmPassword) {
+            document.getElementById("confirmPasswordError").style.display = "block";
+            isValid = false;
+        }
+        
+        if (!isValid) return;
+        
+        // Show loading spinner
+        document.getElementById("loadingSpinner").style.display = "block";
+        
+        // Simulate API call
+        setTimeout(() => {
+            document.getElementById("loadingSpinner").style.display = "none";
+            
+            // Store user data
+            sessionStorage.setItem("isLoggedIn", "true");
+            sessionStorage.setItem("username", name);
+            
+            // Show success message
+            document.getElementById("successMessage").style.display = "block";
+            
+            // Redirect to dashboard
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1500);
+        }, 1500);
+    }
+    
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    function isValidMobile(mobile) {
+        const mobileRegex = /^[0-9]{10}$/;
+        return mobileRegex.test(mobile);
+    }
+    
+    // Event listeners
+    document.getElementById("password").addEventListener("input", function(e) {
+        checkPasswordStrength(e.target.value);
+    });
+    
+    // Check if user is already logged in
+    document.addEventListener("DOMContentLoaded", function() {
+        const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+        if (isLoggedIn === "true") {
+            window.location.href = "dashboard.html";
+        }
+    });
+    </script>
+</body>
+</html>

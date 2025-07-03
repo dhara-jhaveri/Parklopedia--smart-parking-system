@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parklopedia - Booking Confirmation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-name {
+            margin-right: 15px;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .confirmation-box {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+        .success-icon {
+            font-size: 80px;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+        .confirmation-title {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        .confirmation-message {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .booking-details {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            flex: 1;
+            color: #777;
+        }
+        .detail-value {
+            flex: 2;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
+        .qr-code img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .action-btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .primary-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+        }
+        .primary-btn:hover {
+            background-color: #2980b9;
+        }
+        .secondary-btn {
+            background-color: white;
+            color: #3498db;
+            border: 1px solid #3498db;
+        }
+        .secondary-btn:hover {
+            background-color: #f5f9fc;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Parklopedia</div>
+        <div class="user-info">
+            <span class="user-name" id="userNameDisplay">Welcome, User</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="confirmation-box">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 class="confirmation-title">Booking Confirmed!</h1>
+            <p class="confirmation-message">Your parking spot has been successfully booked. Please use the QR code below for entry.</p>
+            
+            <div class="booking-details">
+                <div class="detail-row">
+                    <span class="detail-label">Booking ID:</span>
+                    <span class="detail-value" id="bookingId">PK123456</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Location:</span>
+                    <span class="detail-value" id="location">Alpha Mall Parking</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Parking Spot:</span>
+                    <span class="detail-value" id="spotId">A12</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Vehicle:</span>
+                    <span class="detail-value" id="vehicle">Honda Civic (GJ01AB1234)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date:</span>
+                    <span class="detail-value" id="date">2023-06-15</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time:</span>
+                    <span class="detail-value" id="time">10:00 AM - 11:00 AM</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Payment Method:</span>
+                    <span class="detail-value" id="paymentMethod">Credit Card</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Amount Paid:</span>
+                    <span class="detail-value" id="amountPaid">₹30.00</span>
+                </div>
+            </div>
+            
+            <div class="qr-code">
+                <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PK123456" alt="QR Code">
+            </div>
+            
+            <div class="action-buttons">
+                <a href="dashboard.html" class="action-btn primary-btn">Go to Dashboard</a>
+                <a href="my-bookings.html" class="action-btn secondary-btn">View My Bookings</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Check if user is logged in
+    document.addEventListener("DOMContentLoaded", function() {
+        const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+        if (!isLoggedIn || isLoggedIn !== "true") {
+            window.location.href = "login.html";
+            return;
+        }
+        
+        // Display user name
+        const username = sessionStorage.getItem("username");
+        if (username) {
+            document.getElementById("userNameDisplay").textContent = "Welcome, " + username;
+        }
+        
+        // Load booking details
+        loadBookingDetails();
+    });
+    
+    function logout() {
+        sessionStorage.removeItem("isLoggedIn");
+        sessionStorage.removeItem("username");
+        window.location.href = "login.html";
+    }
+    
+    function loadBookingDetails() {
+        const bookingDetails = sessionStorage.getItem("currentBookingDetails");
+        if (!bookingDetails) {
+            window.location.href = "dashboard.html";
+            return;
+        }
+        
+        const booking = JSON.parse(bookingDetails);
+        
+        // Populate booking details
+        document.getElementById("bookingId").textContent = booking.bookingId;
+        document.getElementById("location").textContent = booking.location;
+        document.getElementById("spotId").textContent = booking.spotId;
+        document.getElementById("vehicle").textContent = `${booking.vehicle.name} (${booking.vehicle.numberPlate})`;
+        document.getElementById("date").textContent = booking.date;
+        document.getElementById("time").textContent = `${booking.startTime} - ${booking.endTime}`;
+        
+        // Format payment method
+        let paymentMethodText = "Unknown";
+        if (booking.paymentMethod === "card") {
+            paymentMethodText = "Credit/Debit Card";
+        } else if (booking.paymentMethod === "upi") {
+            paymentMethodText = "UPI";
+        } else if (booking.paymentMethod === "fastag") {
+            paymentMethodText = "FASTag";
+        }
+        document.getElementById("paymentMethod").textContent = paymentMethodText;
+        
+        // Set amount paid
+        document.getElementById("amountPaid").textContent = booking.amount;
+        
+        // Generate QR code with booking ID
+        document.getElementById("qrCodeImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${booking.bookingId}`;
+    }
+    </script>
+</body>
+</html>

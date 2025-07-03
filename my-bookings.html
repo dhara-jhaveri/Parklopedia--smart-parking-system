@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parklopedia - My Bookings</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-name {
+            margin-right: 15px;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .page-title {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .back-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .bookings-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+        .booking-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #777;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            color: #3498db;
+        }
+        .tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+        .booking-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .booking-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .booking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .booking-header {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        .booking-id {
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .booking-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-confirmed {
+            background-color: #e1f5fe;
+            color: #0288d1;
+        }
+        .status-completed {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        .status-cancelled {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        .booking-body {
+            padding: 15px;
+        }
+        .booking-location {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .booking-detail {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        .detail-icon {
+            width: 20px;
+            margin-right: 10px;
+            color: #3498db;
+        }
+        .detail-text {
+            color: #555;
+        }
+        .booking-footer {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .booking-price {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+        .view-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        .view-btn:hover {
+            background-color: #2980b9;
+        }
+        .cancel-btn {
+            background-color: white;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            margin-right: 10px;
+        }
+        .cancel-btn:hover {
+            background-color: #ffebee;
+        }
+        .no-bookings {
+            text-align: center;
+            padding: 50px 0;
+            color: #777;
+        }
+        .no-bookings i {
+            font-size: 50px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        .no-bookings p {
+            margin-bottom: 20px;
+        }
+        .book-now-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Parklopedia</div>
+        <div class="user-info">
+            <span class="user-name" id="userNameDisplay">Welcome, User</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        
+        <h1 class="page-title">My Bookings</h1>
+        
+        <div class="bookings-container">
+            <div class="booking-tabs">
+                <div class="tab active" onclick="showTab('all')">All Bookings</div>
+                <div class="tab" onclick="showTab('upcoming')">Upcoming</div>
+                <div class="tab" onclick="showTab('completed')">Completed</div>
+                <div class="tab" onclick="showTab('cancelled')">Cancelled</div>
+            </div>
+            
+            <div id="bookingsContent">
+                <!-- Booking cards will be loaded here -->
+            </div>
+            
+            <div id="noBookings" class="no-bookings" style="display: none;">
+                <i class="fas fa-calendar-times"></i>
+                <h3>No Bookings Found</h3>
+                <p>You haven't made any parking bookings yet.</p>
+                <a href="parking-locations.html" class="book-now-btn">Book Parking Now</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let allBookings = [];
+    let currentTab = 'all';
+    
+    // Check if user is logged in
+    document.addEventListener("DOMContentLoaded", function() {
+        const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+        if (!isLoggedIn || isLoggedIn !== "true") {
+            window.location.href = "login.html";
+            return;
+        }
+        
+        // Display user name
+        const username = sessionStorage.getItem("username");
+        if (username) {
+            document.getElementById("userNameDisplay").textContent = "Welcome, " + username;
+        }
+        
+        // Load bookings
+        loadBookings();
+    });
+    
+    function logout() {
+        sessionStorage.removeItem("isLoggedIn");
+        sessionStorage.removeItem("username");
+        window.location.href = "login.html";
+    }
+    
+    function loadBookings() {
+        // Get bookings from storage
+        const storedBookings = sessionStorage.getItem("bookings");
+        if (storedBookings) {
+            allBookings = JSON.parse(storedBookings);
+        }
+        
+        // Display bookings based on current tab
+        displayBookings();
+    }
+    
+    function displayBookings() {
+        const bookingsContent = document.getElementById("bookingsContent");
+        const noBookings = document.getElementById("noBookings");
+        
+        // Filter bookings based on current tab
+        let filteredBookings = [];
+        const today = new Date().toISOString().split('T')[0];
+        
+        if (currentTab === 'all') {
+            filteredBookings = allBookings;
+        } else if (currentTab === 'upcoming') {
+            filteredBookings = allBookings.filter(booking => 
+                booking.date >= today && booking.status !== 'Cancelled'
+            );
+        } else if (currentTab === 'completed') {
+            filteredBookings = allBookings.filter(booking => 
+                booking.date < today && booking.status !== 'Cancelled'
+            );
+        } else if (currentTab === 'cancelled') {
+            filteredBookings = allBookings.filter(booking => 
+                booking.status === 'Cancelled'
+            );
+        }
+        
+        // Check if there are any bookings to display
+        if (filteredBookings.length === 0) {
+            bookingsContent.innerHTML = "";
+            noBookings.style.display = "block";
+            return;
+        }
+        
+        // Display bookings
+        noBookings.style.display = "none";
+        
+        // Sort bookings by date (newest first)
+        filteredBookings.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        // Create HTML for bookings
+        let html = '<div class="booking-cards">';
+        
+        filteredBookings.forEach((booking, index) => {
+            // Determine booking status
+            let statusClass = "status-confirmed";
+            let statusText = "Confirmed";
+            
+            if (booking.status === 'Cancelled') {
+                statusClass = "status-cancelled";
+                statusText = "Cancelled";
+            } else if (booking.date < today) {
+                statusClass = "status-completed";
+                statusText = "Completed";
+            }
+            
+            // Format payment method
+            let paymentMethod = "Unknown";
+            if (booking.paymentMethod === "card") {
+                paymentMethod = "Card";
+            } else if (booking.paymentMethod === "upi") {
+                paymentMethod = "UPI";
+            } else if (booking.paymentMethod === "fastag") {
+                paymentMethod = "FASTag";
+            }
+            
+            html += `
+            <div class="booking-card">
+                <div class="booking-header">
+                    <h3 class="booking-id">${booking.bookingId}</h3>
+                    <span class="booking-status ${statusClass}">${statusText}</span>
+                </div>
+                <div class="booking-body">
+                    <h3 class="booking-location">${booking.location}</h3>
+                    <div class="booking-detail">
+                        <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="detail-text">Spot: ${booking.spotId}</div>
+                    </div>
+                    <div class="booking-detail">
+                        <div class="detail-icon"><i class="fas fa-car"></i></div>
+                        <div class="detail-text">${booking.vehicle.name} (${booking.vehicle.numberPlate})</div>
+                    </div>
+                    <div class="booking-detail">
+                        <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="detail-text">${booking.date}</div>
+                    </div>
+                    <div class="booking-detail">
+                        <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                        <div class="detail-text">${booking.startTime} - ${booking.endTime}</div>
+                    </div>
+                    <div class="booking-detail">
+                        <div class="detail-icon"><i class="fas fa-credit-card"></i></div>
+                        <div class="detail-text">Paid via ${paymentMethod}</div>
+                    </div>
+                </div>
+                <div class="booking-footer">
+                    <div class="booking-price">${booking.amount}</div>
+                    <div>
+                        ${booking.status !== 'Cancelled' && booking.date >= today ? 
+                            `<button class="action-btn cancel-btn" onclick="cancelBooking(${index})">Cancel</button>` : ''}
+                        <button class="action-btn view-btn" onclick="viewBooking(${index})">View Details</button>
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+        
+        html += '</div>';
+        bookingsContent.innerHTML = html;
+    }
+    
+    function showTab(tab) {
+        // Update active tab
+        document.querySelectorAll('.tab').forEach(tabElement => {
+            tabElement.classList.remove('active');
+        });
+        document.querySelector(`.tab:nth-child(${
+            tab === 'all' ? 1 : tab === 'upcoming' ? 2 : tab === 'completed' ? 3 : 4
+        })`).classList.add('active');
+        
+        // Update current tab and display bookings
+        currentTab = tab;
+        displayBookings();
+    }
+    
+    function cancelBooking(index) {
+        if (confirm("Are you sure you want to cancel this booking?")) {
+            // Update booking status
+            allBookings[index].status = 'Cancelled';
+            sessionStorage.setItem("bookings", JSON.stringify(allBookings));
+            
+            // Refresh display
+            displayBookings();
+        }
+    }
+    
+    function viewBooking(index) {
+        // Store selected booking details
+        sessionStorage.setItem("currentBookingDetails", JSON.stringify(allBookings[index]));
+        
+        // Redirect to booking details page
+        window.location.href = "booking-confirmation.html";
+    }
+    </script>
+</body>
+</html>

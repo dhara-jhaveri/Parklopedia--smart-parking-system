@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parking Map</title>
+</head>
+<body>
+    <h1>Parking Map</h1>
+    <p id="selectedLocation"></p>
+    <button onclick="confirmLocation()">Confirm Location</button>
+
+    <script>
+    window.onload = () => {
+        const location = sessionStorage.getItem("selectedLocation");
+        if (!location) {
+            window.location.href = "locations.html";
+        }
+        document.getElementById("selectedLocation").innerText = "Selected Location: " + location;
+    };
+
+    function confirmLocation() {
+        window.location.href = "booking.html";
+    }
+    </script>
+</body>
+</html>
